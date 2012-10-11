@@ -9,6 +9,7 @@
  *
  * Call .blokkendoos() on an element, passing along the following options in an object (all optional)
  * - clone (boolean). Should elements be cloned (multiple instances possible) or moved (never more then 1 of a kind ends up in the grid). Default: False
+ * - fadeEffect (boolean). When true, does a little fade animation when (re)placing blocks. Default: true
  *
  * Call .blokkendoos('data') on the same element to retrieve an object containing the data of which blocks are in what cells. Format: cell-id => block-id
  *
@@ -24,7 +25,8 @@
 (function ($) {
 
     var defaultOptions = {
-        clone: false
+        clone:      false,
+        fadeEffect: true
     }
 
     var methods = {
@@ -84,17 +86,19 @@
 
                 if ($sourceCell) {
                     //current block has to move, either switch them around or move it to the stash
-                    $currentBlock.fadeTo(0, 0);
                     $currentBlock.appendTo($sourceCell);
-                    $currentBlock.fadeTo(250, 1);
                     $currentBlock.data('bd-cell', $sourceCell);
                     $sourceCell.data('bd-block', $currentBlock);
+
+                    methods.fadeEffect(options, $currentBlock);
+
                 } else {
                     //we dragged from the stash, remove the block that was occupying this cell
                     $currentBlock.data('bd-cell', null);
                     if (!options.clone) {
                         //if master doesn't want us to clone, we move the block back to the stash
                         $currentBlock.prependTo($el.find('*[data-bd-stash]'));
+                        methods.fadeEffect(options, $currentBlock);
                     }
                 }
             } else if ($sourceCell) {
@@ -103,6 +107,7 @@
             }
 
             $block.appendTo($cell);
+            methods.fadeEffect(options, $block);
 
             $block.data('bd-cell', $cell);
             $cell.data('bd-block', $block);
@@ -119,6 +124,7 @@
             } else {
                 //not cloning, so moving the block back to the stash
                 $block.prependTo($el.find("*[data-bd-stash]"));
+                methods.fadeEffect(options, $block);
             }
         },
 
@@ -133,6 +139,12 @@
             });
 
             return result;
+        },
+
+        fadeEffect: function (options, $block) {
+            if (options.fadeEffect) {
+                $block.fadeTo(0, 0).fadeTo(500, 1);
+            }
         }
     }
 
