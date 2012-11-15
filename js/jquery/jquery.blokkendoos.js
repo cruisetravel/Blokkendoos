@@ -19,7 +19,6 @@
  * -- Inside this stash, create the blocks any way you like, but give them the attribute data-bd-block-id. The value of this must be unique.
  * - Have ONE element inside the wrapper with the attribute data-bd-grid (no value required). This is where the
  * -- Define cells inside the grid. These are the positions that the blocks can be put in. Must have the attribute data-bd-cell-id. The value of this must be unique.
-
  */
 
 (function ($) {
