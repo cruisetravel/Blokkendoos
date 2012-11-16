@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+
+<div class="container" id="blokkendoos">
+    <div class="row">
+        <div class="span4" id="stash" data-bd-stash>
+            <div class="block" data-bd-block-id="example1">
+                <img src="img/layout/blok1.jpg" height=293 />
+            </div>
+            <div class="block" data-bd-block-id="example2">
+                <img src="img/layout/blok2.jpg" height=293 />
+            </div>
+            <div class="block" data-bd-block-id="example3">
+                <img src="img/layout/blok3.jpg" height=293 />
+            </div>
+            <div class="block" data-bd-block-id="example4">
+                <img src="img/layout/blok4.jpg" height=293 />
+            </div>
+            <div class="block" data-bd-block-id="example5">Ik ben blok 5</div>
+            <div class="block" data-bd-block-id="example6">Ik ben blok 6</div>
+        </div>
+        <div class="span8" id="grid" data-bd-grid>
+            <div class="row">
+                <div class="span4 cell" data-bd-cell-id="position1"></div>
+                <div class="span4 cell" data-bd-cell-id="position2"></div>
+            </div>
+            <div class="row">
+                <div class="span4 cell" data-bd-cell-id="position3"></div>
+                <div class="span4 cell" data-bd-cell-id="position4"></div>
+            </div>
+            <div class="row">
+                <div class="span8">
+                    <button class="btn btn-large pull-right" id="getdata" style="margin-top:10px;">Get data</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
