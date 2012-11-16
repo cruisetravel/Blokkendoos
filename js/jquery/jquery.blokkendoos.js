@@ -168,6 +168,9 @@
                 }
             }
 
+            //no deny nor return: It's kay.
+            return true;
+
         },
 
         findStash: function ($el, options, data, $block) {
