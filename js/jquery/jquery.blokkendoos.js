@@ -63,6 +63,7 @@
                 accept:     '*[data-bd-grid] *[data-bd-block-id]',
                 hoverClass: 'bd-cell-hover',
                 drop:       function (e, ui) {
+                    //note: Since we are calling removeBlock(), if user drops a block in a stash it's not meant to go in, it will find the right stash and still remove it
                     var $block = $(ui.draggable);
                     methods.removeBlock($el, options, data, $block);
                 }
@@ -74,6 +75,11 @@
             if (!$sourceCell && options.clone) {
                 //master wishes for us to clone blocks (from the stash). We obey.
                 $block = $block.clone(true, true);
+            }
+
+            //is this block allowed to go in this cell?
+            if (!methods.allowBlock($block, $cell)) {
+                return false;
             }
 
             var $sourceCell = $block.data('bd-cell');
@@ -93,12 +99,8 @@
 
                 } else {
                     //we dragged from the stash, remove the block that was occupying this cell
-                    $currentBlock.data('bd-cell', null);
-                    if (!options.clone) {
-                        //if master doesn't want us to clone, we move the block back to the stash
-                        $currentBlock.prependTo($el.find('*[data-bd-stash]'));
-                        methods.fadeEffect(options, $currentBlock);
-                    }
+                    methods.removeBlock($el, options, data, $currentBlock);
+
                 }
             } else if ($sourceCell) {
                 //clear the source cell so it no longer thinks it's holding a block
@@ -122,9 +124,71 @@
                 $block.remove();
             } else {
                 //not cloning, so moving the block back to the stash
-                $block.prependTo($el.find("*[data-bd-stash]"));
+                var $stash = methods.findStash($el, options, data, $block);
+
+                $block.prependTo($stash);
                 methods.fadeEffect(options, $block);
             }
+        },
+
+        //$cell can also be a stash, same idea
+        allowBlock:  function ($block, $cell) {
+            var blockType = $block.data('bd-type');
+            var cellAccept = $cell.data('bd-accept');
+            var cellDeny = $cell.data('bd-deny');
+
+            if (cellAccept && cellDeny) {
+                $.error("Cell has both bd-accept and bd-deny");
+                return false;
+            }
+
+            if (cellAccept) {
+                //does the cell even have a type?
+                if (!blockType) {
+                    return false;
+                }
+
+                var acceptTypes = cellAccept.split(',');
+                if (acceptTypes.indexOf(blockType) > -1) {
+                    return true;
+                }
+            }
+
+            if (cellDeny) {
+                //does the cell even have a type? if not, it's probably ok
+                if (!blockType) {
+                    return true;
+                }
+
+                var denyTypes = cellDeny.split(',');
+                if (denyTypes.indexOf(blockType) > -1) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+        },
+
+        findStash: function ($el, options, data, $block) {
+            var $stash = null;
+
+            //find all stashes and loop through them. If more then one matches we have a problem
+            $el.find("*[data-bd-stash]").each(function () {
+                if (methods.allowBlock($block, $(this))) {
+                    if (!$stash) {
+                        $stash = $(this);
+                    } else {
+                        $.error("More then one stash matches for this block. Go fix it.");
+                    }
+                }
+            });
+
+
+            if (!$stash) {
+                $.error("No matching stash found for block.");
+            }
+            return $stash;
         },
 
         extractData: function ($el, options, data) {
@@ -157,7 +221,7 @@
 
         if (!options) {
             if (args[0].clone === true) {
-                alert("Blokkendoos is currently completely borked when clone = true. Please turn it off or whack Nick across the jaw with a leg of goat.");
+                $.error("Blokkendoos is currently completely borked when clone = true. Please turn it off or whack Nick across the jaw with a leg of goat.");
             }
             methods.init($(this), args[0]);
             return $el;

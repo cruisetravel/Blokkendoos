@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+
+<div class="container" id="blokkendoos2">
+
+    <div class="row">
+        <div class="span12">
+            <h3>Accepts red blocks</h3>
+
+            <div class="well well-small" id="stash-red" data-bd-stash data-bd-accept='red'>
+                <div class="red-block" data-bd-block-id='red1' data-bd-type="red"></div>
+                <div class="red-block" data-bd-block-id='red1' data-bd-type="red"></div>
+                <div class="red-block" data-bd-block-id='red1' data-bd-type="red"></div>
+                <div class="red-block" data-bd-block-id='red1' data-bd-type="red"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="span12">
+            <h3>Accepts pink and red blocks</h3>
+
+            <div class="well well-small" id="stash-pinkred" data-bd-stash data-bd-accept='pink,red'>
+                <div class="pink-block" data-bd-block-id='pink1' data-bd-type="pink"></div>
+                <div class="pink-block" data-bd-block-id='pink2' data-bd-type="pink"></div>
+                <div class="pink-block" data-bd-block-id='pink3' data-bd-type="pink"></div>
+                <div class="pink-block" data-bd-block-id='pink4' data-bd-type="pink"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="span12">
+            <h3>Accepts all but pink blocks</h3>
+
+            <div class="well well-small" id="stash-rainbow" data-bd-stash data-bd-deny='red'>
+                <div class="blue-block" data-bd-block-id='blue1' data-bd-type="blue"></div>
+                <div class="blue-block" data-bd-block-id='blue2' data-bd-type="blue"></div>
+                <div class="blue-block" data-bd-block-id='blue3' data-bd-type="blue"></div>
+                <div class="blue-block" data-bd-block-id='blue4' data-bd-type="blue"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="span12">
+            <h3>Grid</h3>
+
+            <div class="well well-small" data-bd-grid>
+                <div class="cell" data-bd-cell-id="cell1" data-bd-accept="blue" data-bd-deny="red"></div>
+                <div class="cell" data-bd-cell-id="cell1" data-bd-accept="red"></div>
+                <div class="cell" data-bd-cell-id="cell1" data-bd-deny="red"></div>
+                <div class="cell" data-bd-cell-id="cell1" data-bd-deny="pink"></div>
+                <div class="cell" data-bd-cell-id="cell1" data-bd-deny="pink,red"></div>
+                <div class="cell" data-bd-cell-id="cell1" data-bd-accept="blue,red"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
