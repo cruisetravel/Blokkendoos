@@ -116,6 +116,8 @@
 
         removeBlock: function ($el, options, data, $block) {
             var $sourceCell = $block.data('bd-cell');
+            if (!$sourceCell) return;
+
             $sourceCell.data('bd-block', null);
             $block.data('bd-cell', null);
 
@@ -140,6 +142,9 @@
             if (cellAccept && cellDeny) {
                 $.error("Cell has both bd-accept and bd-deny");
                 return false;
+            }else if(!cellAccept && !cellDeny){
+                //cell doesn't accept nor deny anything: it's kay.
+                return true;
             }
 
             if (cellAccept) {
@@ -168,8 +173,7 @@
                 }
             }
 
-            //no deny nor return: It's kay.
-            return true;
+            return false;
 
         },
 
@@ -233,6 +237,9 @@
         //calling custom functions
         if (args[0] == 'data') {
             return methods.extractData($el, options, data);
+        } else if (args[0] == 'removeBlock') {
+            //args[1] = $block
+            return methods.removeBlock($el, options, data, args[1]);
         }
 
         //});
