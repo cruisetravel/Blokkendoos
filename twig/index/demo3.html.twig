@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+
+<div class="container" id="blokkendoos2">
+
+
+    <div id='new-blocks' class="hide">
+        <!-- blocks for loading data -->
+        <div class="red-block" data-bd-block-id='red5' data-bd-type="red"></div>
+        <div class="red-block" data-bd-block-id='red6' data-bd-type="red"></div>
+        <div class="red-block" data-bd-block-id='red7' data-bd-type="red"></div>
+        <div class="pink-block" data-bd-block-id='pink5' data-bd-type="pink"></div>
+        <div class="blue-block" data-bd-block-id='blue5' data-bd-type="blue"></div>
+    </div>
+
+    <div class="row">
+        <div class="span12">
+            <h3>Red blocks</h3>
+
+            <div class="well well-small" id="stash-red" data-bd-stash data-bd-accept='red'>
+                <div class="red-block" data-bd-block-id='red1' data-bd-type="red"></div>
+                <div class="red-block" data-bd-block-id='red2' data-bd-type="red"></div>
+                <div class="red-block" data-bd-block-id='red3' data-bd-type="red"></div>
+                <div class="red-block" data-bd-block-id='red4' data-bd-type="red"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="span12">
+            <h3>Pink blocks</h3>
+
+            <div class="well well-small" id="stash-pinkred" data-bd-stash data-bd-accept='pink'>
+                <div class="pink-block" data-bd-block-id='pink1' data-bd-type="pink"></div>
+                <div class="pink-block" data-bd-block-id='pink2' data-bd-type="pink"></div>
+                <div class="pink-block" data-bd-block-id='pink3' data-bd-type="pink"></div>
+                <div class="pink-block" data-bd-block-id='pink4' data-bd-type="pink"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="span12">
+            <h3>Blue blocks</h3>
+
+            <div class="well well-small" id="stash-rainbow" data-bd-stash data-bd-accept='blue'>
+                <div class="blue-block" data-bd-block-id='blue1' data-bd-type="blue"></div>
+                <div class="blue-block" data-bd-block-id='blue2' data-bd-type="blue"></div>
+                <div class="blue-block" data-bd-block-id='blue3' data-bd-type="blue"></div>
+                <div class="blue-block" data-bd-block-id='blue4' data-bd-type="blue"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="span12">
+            <h3>Grid (first cell doesn't accept red)</h3>
+
+            <div class="well well-small" data-bd-grid>
+                <div class="cell" data-bd-cell-id="cell1" data-bd-deny="red"></div>
+                <div class="cell" data-bd-cell-id="cell2"></div>
+                <div class="cell" data-bd-cell-id="cell3"></div>
+                <div class="cell" data-bd-cell-id="cell4"></div>
+                <div class="cell" data-bd-cell-id="cell5"></div>
+                <div class="cell" data-bd-cell-id="cell6"></div>
+            </div>
+
+            <button class="btn" id="loaddata">Load data</button>
+            <button class="btn" id="getdata2">Get data</button>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

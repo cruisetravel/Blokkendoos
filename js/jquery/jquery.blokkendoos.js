@@ -116,9 +116,11 @@
 
         removeBlock: function ($el, options, data, $block) {
             var $sourceCell = $block.data('bd-cell');
-            if (!$sourceCell) return;
 
-            $sourceCell.data('bd-block', null);
+            if ($sourceCell) {
+                $sourceCell.data('bd-block', null);
+            }
+
             $block.data('bd-cell', null);
 
             if (options.clone) {
@@ -142,7 +144,7 @@
             if (cellAccept && cellDeny) {
                 $.error("Cell has both bd-accept and bd-deny");
                 return false;
-            }else if(!cellAccept && !cellDeny){
+            } else if (!cellAccept && !cellDeny) {
                 //cell doesn't accept nor deny anything: it's kay.
                 return true;
             }
@@ -213,8 +215,37 @@
 
         fadeEffect: function (options, $block) {
             if (options.fadeEffect) {
-                $block.fadeTo(0, 0).fadeTo(500, 1);
+                $block.stop().fadeTo(0, 0).fadeTo(500, 1);
             }
+        },
+
+        loadData: function ($el, options, data, newData, $blocks) {
+
+            //first, soft-remove all blocks from the grid
+            $el.find('[data-bd-grid] [data-bd-block-id]').each(function () {
+                methods.removeBlock($el, options, data, $(this));
+            });
+
+            //next: if $blocks has been provided, hard-remove all blocks currently in any stash
+            if (typeof $blocks != 'undefined') {
+                $el.find('[data-bd-stash] [data-bd-block-id]').remove();
+
+                //now introduce the new blocks to teh systems! (by removeBlock()ing them to make them appear in the stash)
+                $blocks.each(function () {
+                    methods.removeBlock($el, options, data, $(this));
+                });
+            }
+
+            //move blocks to their new positions!
+            for(var cellId in newData){
+                var blockId = newData[cellId];
+
+                //find the block and cell
+                var $block = $el.find('[data-bd-stash] [data-bd-block-id='+blockId+']')
+                var $cell = $el.find('[data-bd-grid] [data-bd-cell-id='+cellId+']')
+                methods.moveBlock($el, options, data, $block, $cell);
+            }
+
         }
     }
 
@@ -240,6 +271,10 @@
         } else if (args[0] == 'removeBlock') {
             //args[1] = $block
             return methods.removeBlock($el, options, data, args[1]);
+        } else if (args[0] == 'loadData') {
+            //args[1] = data{}
+            //args[2] = (optional) $blocks <- if given, remove() any and all blocks found in the stashes and the grid itself. If not, simply .removeBlock() them from the grid
+            return methods.loadData($el, options, data, args[1], args[2]);
         }
 
         //});

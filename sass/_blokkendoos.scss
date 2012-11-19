@@ -1,0 +1,71 @@
+#blokkendoos {
+
+    .block {
+        width      : 384px;
+        min-height : 298px;
+        padding    : 10px;
+        @include border-radius(5px);
+        background : #eee;
+        border     : 1px solid #ddd;
+        box-sizing : border-box;
+
+        &.ui-draggable-dragging {
+            border-style : dashed;
+        }
+    }
+
+    #stash .block {
+        margin-bottom : 10px;
+    }
+
+    #grid {
+        background : #aaa;
+
+        .row {
+            margin-bottom : 10px;
+        }
+
+        .cell {
+            background : #bbb;
+            min-height : 298px;
+
+            &.bd-cell-hover {
+                background : #ddd;
+            }
+        }
+    }
+}
+
+#blokkendoos2 {
+    *[data-bd-stash]{
+        height:50px;
+    }
+
+    .red-block, .pink-block, .blue-block {
+        float: left;
+        margin: 2px;
+        width   : 46px;
+        height  : 46px;
+
+        &.red-block {
+            background : red;
+        }
+
+        &.pink-block {
+            background : pink;
+        }
+
+        &.blue-block {
+            background : blue;
+        }
+    }
+
+    .cell {
+        width: 50px;
+        height: 50px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        background: #fff;
+        display: inline-block;
+    }
+}
