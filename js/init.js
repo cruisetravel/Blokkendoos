@@ -27,7 +27,7 @@ $(function () {
                 cell3: 'pink5',
                 cell4: 'red7',
                 cell6: 'blue5'
-            }, $('#new-blocks [data-bd-block-id]'));
+            }, $('#new-blocks [data-bd-block-id]'), true);
         });
     }
 

@@ -37,7 +37,7 @@
 
 
             //make the blocks draggable
-            $el.find("*[data-bd-stash] *[data-bd-block-id]").livequery(function () {
+            $el.find("*[data-bd-stash] *[data-bd-block-id], *[data-bd-grid] *[data-bd-block-id]").livequery(function () {
                 $(this).draggable({
                     helper:  'clone',
                     opacity: 0.5
@@ -219,7 +219,7 @@
             }
         },
 
-        loadData: function ($el, options, data, newData, $blocks) {
+        loadData: function ($el, options, data, newData, $blocks, cloneBlocks) {
 
             //first, soft-remove all blocks from the grid
             $el.find('[data-bd-grid] [data-bd-block-id]').each(function () {
@@ -229,6 +229,11 @@
             //next: if $blocks has been provided, hard-remove all blocks currently in any stash
             if (typeof $blocks != 'undefined') {
                 $el.find('[data-bd-stash] [data-bd-block-id]').remove();
+
+                //if cloneBlocks is true, clone the $blocks instead
+                if(cloneBlocks){
+                    $blocks = $blocks.clone();
+                }
 
                 //now introduce the new blocks to teh systems! (by removeBlock()ing them to make them appear in the stash)
                 $blocks.each(function () {
@@ -274,7 +279,8 @@
         } else if (args[0] == 'loadData') {
             //args[1] = data{}
             //args[2] = (optional) $blocks <- if given, remove() any and all blocks found in the stashes and the grid itself. If not, simply .removeBlock() them from the grid
-            return methods.loadData($el, options, data, args[1], args[2]);
+            //args[3] = (optional) cloneBlocks (bool) <- if true, clone given blocks instead of moving them. Defaults to false
+            return methods.loadData($el, options, data, args[1], args[2], args[3]);
         }
 
         //});
