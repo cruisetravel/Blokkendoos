@@ -39,6 +39,11 @@
                 methods.addSet($el, options, setName);
             });
 
+            //remove required from the template and change it into data-dolly-required
+            $el.find('[data-dolly-template] [required]').each(function () {
+                $(this).removeAttr('required').attr('data-dolly-required', '');
+            });
+
         },
 
         addSet: function ($el, options, setName) {
@@ -74,6 +79,9 @@
                 if ($input.is('[data-dolly-enable]')) {
                     $input.removeAttr('disabled');
                 }
+                if ($input.is('[data-dolly-required]')) {
+                    $input.attr('required', 'required');
+                }
             });
 
             //find out where to put it and do so
@@ -104,7 +112,7 @@
         //calling custom functions
         if (args[0] == 'addset') {
             //args[1] = setName, args[2] (optional) object with data to map
-            return methods.addSet($el, options, args[1], args[2]);
+            return methods.addSet($el, options, args[1]);
         }
 
         //});
