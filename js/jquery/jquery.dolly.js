@@ -6,6 +6,7 @@
  * Call .dolly() on an element (something containing sets), passing along the following options in an object (all optional)
  * - maxSets (int). The max amount of sets, when this number has been reached trying to add more will not work.
  * - $target: (optional) a jQuery element (INSIDE THE MAIN SELECTOR) containing the target, where we want to pleuâh new rows.
+ * - addFieldIds: (optional) boolean, when true, add generated ids to the fields
  *
  * In your HTML, use the following data attributes:
  * data-dolly-set="setname" to create a set (in combination with the next one)
@@ -20,8 +21,9 @@
 (function ($) {
 
     var defaultOptions = {
-        maxSets: 0,
-        $target: null
+        maxSets:     0,
+        $target:     null,
+        addFieldIds: false
     };
 
     var methods = {
@@ -53,6 +55,9 @@
             $set.removeData('dolly-set-template');
             $set.removeAttr('data-dolly-template');
 
+            //remove all name and id attributes
+            $set.add($set.find('*')).removeAttr('id').removeAttr('name');
+
             //set the fieldnames for all inputs (array shite, 0-based)
             $set.find('*[data-dolly-fieldname]').each(function () {
                 var $input = $(this);
@@ -60,8 +65,11 @@
                 var fieldName = $input.data('dolly-fieldname');
                 var fieldIndex = $setTemplate.data('dolly-last-index') + 0;
                 fieldName = fieldName.substring(0, fieldName.lastIndexOf('[')) + '[' + ($clonedSets.length) + ']' + fieldName.substring(fieldName.lastIndexOf('['));
-                var fieldId = fieldName.replace(/\[/g, '_').replace(/\]/g, '_').replace(/__/g, '_');
-                $input.attr('name', fieldName).attr('id', fieldId);
+
+                if (options.addFieldIds) {
+                    var fieldId = fieldName.replace(/\[/g, '_').replace(/\]/g, '_').replace(/__/g, '_');
+                    $input.attr('name', fieldName).attr('id', fieldId);
+                }
 
                 if ($input.is('[data-dolly-enable]')) {
                     $input.removeAttr('disabled');
