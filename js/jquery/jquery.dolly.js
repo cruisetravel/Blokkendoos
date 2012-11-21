@@ -13,7 +13,7 @@
  * data-dolly-template (no value) to specify that said set is a template; this one will be hidden using css and will not be included when the form is submitted
  * data-dolly-addset="setname" will add a row to the specified set, to be filled by the user, that demon.
  * data-dolly-fieldname="user[name]" placeholder for the actual fieldname; the template should have none or it will be included. Note that
- * data-dolly-enable with this attribute added, dolly removes the disabled attribute. Symfony shite. If this doesn't make sense to you, you probably don't need it.
+ * data-dolly-enable with this attribute added, dolly removes the readonly attribute. Symfony shite. If this doesn't make sense to you, you probably don't need it.
  * you should NOT use the regular array formatting ([0]), as Dolly will do this automatically.
  */
 
@@ -70,14 +70,15 @@
                 var fieldName = $input.data('dolly-fieldname');
                 var fieldIndex = $setTemplate.data('dolly-last-index') + 0;
                 fieldName = fieldName.substring(0, fieldName.lastIndexOf('[')) + '[' + ($clonedSets.length) + ']' + fieldName.substring(fieldName.lastIndexOf('['));
+                $input.attr('name', fieldName);
 
                 if (options.addFieldIds) {
                     var fieldId = fieldName.replace(/\[/g, '_').replace(/\]/g, '_').replace(/__/g, '_');
-                    $input.attr('name', fieldName).attr('id', fieldId);
+                    $input.attr('id', fieldId);
                 }
 
                 if ($input.is('[data-dolly-enable]')) {
-                    $input.removeAttr('disabled');
+                    $input.removeAttr('readonly');
                 }
                 if ($input.is('[data-dolly-required]')) {
                     $input.attr('required', 'required');
