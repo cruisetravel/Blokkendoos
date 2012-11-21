@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="span12">
+            <pre>{{debug|raw}}</pre>
+            <div class="hero-unit" id="mijn-dolly-toren">
+                <h2>Shit-orderform</h2>
+
+                <form method="post">
+                    <label>Who's going to pay for this shit?</label>
+                    <input name="payer" placeholder="" class="" /><br /><br />
+
+                    <label>Shipping shit</label>
+
+                    <div class="form-inline">
+                        <label class="radio">
+                            <input type="radio" class="form" name="shipping" value="ship" checked /> Send this shit to me
+                        </label> &nbsp;&nbsp;&nbsp;
+                        <label class="radio">
+                            <input type="radio" name="shipping" value="pickup" /> I'll come pick this shit up. Fuck
+                        </label>
+                    </div>
+
+                    <div data-dolly-set="shit" data-dolly-template class="shitrow">
+                        <input data-dolly-fieldname="shit[name]" placeholder="Name" class="input" />
+                        <input data-dolly-fieldname="shit[amount]" placeholder="Amount" class="input input-small" data-dolly-eanable disabled="disabled" />
+                    </div><br />
+
+                    <div class="well" id="dolly-target">
+                        <label>Shit</label>
+                    </div>
+
+                    <button data-dolly-addset="shit" class="btn">Add shit</button>
+                    <button type="submit" id="getshit" class="btn btn-primary">Get shit</button>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
