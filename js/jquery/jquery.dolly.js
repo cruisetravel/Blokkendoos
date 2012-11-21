@@ -5,12 +5,14 @@
  *
  * Call .dolly() on an element (something containing sets), passing along the following options in an object (all optional)
  * - maxSets (int). The max amount of sets, when this number has been reached trying to add more will not work.
+ * - $target: (optional) a jQuery element (INSIDE THE MAIN SELECTOR) containing the target, where we want to pleuâh new rows.
  *
  * In your HTML, use the following data attributes:
  * data-dolly-set="setname" to create a set (in combination with the next one)
  * data-dolly-template (no value) to specify that said set is a template; this one will be hidden using css and will not be included when the form is submitted
  * data-dolly-addset="setname" will add a row to the specified set, to be filled by the user, that demon.
  * data-dolly-fieldname="user[name]" placeholder for the actual fieldname; the template should have none or it will be included. Note that
+ * data-dolly-enable with this attribute added, dolly removes the disabled attribute. Symfony shite. If this doesn't make sense to you, you probably don't need it.
  * you should NOT use the regular array formatting ([0]), as Dolly will do this automatically.
  */
 
@@ -18,7 +20,8 @@
 (function ($) {
 
     var defaultOptions = {
-        maxSets:      0
+        maxSets: 0,
+        $target: null
     };
 
     var methods = {
@@ -38,7 +41,7 @@
 
         addSet: function ($el, options, setName) {
 
-            var $clonedSets = $el.find('*[data-dolly-set=' + setName + ']');
+            var $clonedSets = $el.find('*[data-dolly-set=' + setName + ']:not([data-dolly-template])');
 
             if ($clonedSets.length > options.maxSets && options.maxSets > 0) {
                 return;
@@ -49,18 +52,26 @@
             var $set = $setTemplate.clone();
             $set.removeData('dolly-set-template');
             $set.removeAttr('data-dolly-template');
-            $set.removeAttr('data-dolly-fieldname');
 
             //set the fieldnames for all inputs (array shite, 0-based)
             $set.find('*[data-dolly-fieldname]').each(function () {
-                var fieldName = $(this).data('dolly-fieldname');
+                var $input = $(this);
+
+                var fieldName = $input.data('dolly-fieldname');
                 var fieldIndex = $setTemplate.data('dolly-last-index') + 0;
-                fieldName = fieldName.substring(0, fieldName.lastIndexOf('[')) + '[' + ($clonedSets.length - 1) + ']' + fieldName.substring(fieldName.lastIndexOf('['));
-                $(this).attr('name', fieldName);
+                fieldName = fieldName.substring(0, fieldName.lastIndexOf('[')) + '[' + ($clonedSets.length) + ']' + fieldName.substring(fieldName.lastIndexOf('['));
+                var fieldId = fieldName.replace(/\[/g, '_').replace(/\]/g, '_').replace(/__/g, '_');
+                $input.attr('name', fieldName).attr('id', fieldId);
+
+                if ($input.is('[data-dolly-enable]')) {
+                    $input.removeAttr('disabled');
+                }
             });
 
             //find out where to put it and do so
-            if ($clonedSets.length) {
+            if (options.$target) {
+                options.$target.append($set);
+            } else if ($clonedSets.length) {
                 $clonedSets.last().after($set);
             } else {
                 $setTemplate.after($set);
