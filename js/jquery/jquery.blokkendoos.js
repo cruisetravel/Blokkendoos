@@ -13,12 +13,20 @@
  *
  * Call .blokkendoos('data') on the same element to retrieve an object containing the data of which blocks are in what cells. Format: cell-id => block-id
  *
+ * Call .blokkendoos('loadData') on the same element to populate the grid. The second argument should be an object with key = cellID and value = blockID. The third is optional
+ * and contains a set of jQuery elements. When given, all existing blocks will be removed and replaced with these.
+ * If the fourth argument is true, instead of moving the new blocks, clone them.
+ *
  *
  * Requirements:
- * - Have ONE element inside the wrapper with the attribute data-bd-stash (no value required). This 'stash' will contain the available blocks
- * -- Inside this stash, create the blocks any way you like, but give them the attribute data-bd-block-id. The value of this must be unique.
- * - Have ONE element inside the wrapper with the attribute data-bd-grid (no value required). This is where the
+ * - Have one or more elements inside the wrapper with the attribute data-bd-stash (no value required). These 'stashes' will contain the available blocks
+ * -- Inside the stash, create the blocks any way you like, but give them the attribute data-bd-block-id. The value of this must be unique.
+ * -- Alternatively, use the loadData method.
+ * - Have ONE element inside the wrapper with the attribute data-bd-grid (no value required). This is where the blocks can be dragged to
  * -- Define cells inside the grid. These are the positions that the blocks can be put in. Must have the attribute data-bd-cell-id. The value of this must be unique.
+ *
+ * - You can define of what type a block is by giving them data-bd-block-type="whatever"
+ * - You can specify what blocktypes a stash or cell will accept/deny by using data-bd-accept="type1,type2,type3" or datab-bd-deny, but not both.
  */
 
 (function ($) {
