@@ -4,25 +4,28 @@
  * Usage:
  *
  * Call .crush() on an element (something containing sets), passing along the following options in an object (all optional)
- * - maxSets (int). The max amount of sets, when this number has been reached trying to add more will not work.
- * - $target: (optional) a jQuery element (INSIDE THE MAIN SELECTOR) containing the target, where we want to pleuâh new rows.
+ * - minScale (float) the minimum to which the content will scale (0-1)
+ * - maxScale (float) the maximum scale to which the content will scale (0-1)
+ * - fitHeight (boolean) should the content be scaled so that it's height will fit in the parent?
+ * - fitWidth (boolean) should the content be scaled so that it's width will fit in the parent?
+ * - setParentHeight (boolean) should the container adjust it's height so that the content will fit? (Cannot be used together with fitHeight)
+ * - centerContent (boolean) should the content be centered if it's smaller then its parent?
  *
- * In your HTML, use the following data attributes:
- * data-crush-set="setname" to create a set (in combination with the next one)
- * data-crush-template (no value) to specify that said set is a template; this one will be hidden using css and will not be included when the form is submitted
- * data-crush-addset="setname" will add a row to the specified set, to be filled by the user, that demon.
- * data-crush-fieldname="user[name]" placeholder for the actual fieldname; the template should have none or it will be included. Note that
- * data-crush-enable with this attribute added, crush removes the disabled attribute. Symfony shite. If this doesn't make sense to you, you probably don't need it.
- * you should NOT use the regular array formatting ([0]), as Crush will do this automatically.
+ * In your HTML, make sure that the element you are calling the plugin on has a position, be it relative, absolute, or whatever. Also, the first child must have position:abslute.
+ * Only the FIRST element inside this container will be scaled. If there are more children in there, the plugin may cause unexpected results.
+ * Now go, young warrior. Go and set the world on fire!
  */
 
 
 (function ($) {
 
     var defaultOptions = {
-        minScale:  0,
-        maxScale:  1,
-        setHeight: true
+        minScale:        0,
+        maxScale:        1,
+        fitHeight:       false,
+        fitWidth:        true,
+        setParentHeight: false,
+        centerContent:   true
     };
 
     var methods = {
@@ -43,20 +46,23 @@
         },
 
         scale: function ($el, options, data) {
-            var ratio = $el.width() / data.$scalee.outerWidth();
+
+            if (options.fitHeight && options.setParentHeight) {
+                $.error("You cannot set both fitHeight and setParentHeight");
+            }
+
+            if (options.fitWidth && !options.fitHeight) {
+                var ratio = $el.width() / data.$scalee.outerWidth();
+            } else if (!options.fitWidth && options.fitHeight) {
+                var ratio = $el.height() / data.$scalee.outerHeight();
+            } else {
+                var ratio = Math.min($el.width() / data.$scalee.outerWidth(), $el.height() / data.$scalee.outerHeight());
+            }
+
+            ratio = Math.min(options.maxScale, ratio);
+            ratio = Math.max(options.minScale, ratio);
 
             data.$scalee.css({
-
-                //Reference
-                /*
-                 zoom: 0.75;
-                 -moz-transform: scale(0.75);
-                 -moz-transform-origin: 0 0;
-                 -o-transform: scale(0.75);
-                 -o-transform-origin: 0 0;
-                 -webkit-transform: scale(0.75);
-                 -webkit-transform-origin: 0 0;
-                 */
 
                 //Good browsers
                 transform: 'scale(' + ratio + ')',
@@ -76,14 +82,22 @@
 
                 //Microsoft's shit, including IE7 and up!
                 msTransform: 'scale(' + ratio + ')',
-                msTransformOrigin:      '0 0'
+                msTransformOrigin:     '0 0'
 
             });
 
             var actualWidth = data.$scalee.outerWidth() * ratio;
             var actualHeight = data.$scalee.outerHeight() * ratio;
 
-            $el.css('height', actualHeight);
+            if (options.setParentHeight) {
+                $el.css('height', actualHeight);
+            }
+
+            if (options.centerContent) {
+                data.$scalee.css({
+                    left: ($el.innerWidth() - actualWidth) / 2
+                })
+            }
         }
     }
 

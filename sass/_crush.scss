@@ -1,11 +1,18 @@
 #scalethisshit {
     position : relative;
     overflow : hidden;
+    height   : 250px;
 
     iframe {
-        border : 0 !important;
-        width  : 1900px;
-        height:400px;
-        position: absolute;
+        border   : 0 !important;
+        width    : 1900px;
+        height   : 900px;
+        position : absolute;
+    }
+
+    #dummy-page {
+        width : 1000px;
+        position:absolute;
+        * { outline : 1px dashed lime; }
     }
 }

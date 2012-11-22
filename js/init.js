@@ -33,9 +33,17 @@ $(function () {
 
     if ($.fn.dolly) {
         $('#mijn-dolly-toren').dolly({
-            maxSets: 10
+            maxSets:     10,
+            $target:     $('#dolly-target'),
+            addFieldIds: false
         });
     }
 
+    if ($.fn.crush) {
+        $('#scalethisshit').crush({
+            //fitHeight: true,
+            setParentHeight: true
+        });
+    }
 
 });
