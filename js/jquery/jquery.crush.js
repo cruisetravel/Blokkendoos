@@ -10,10 +10,16 @@
  * - fitWidth (boolean) should the content be scaled so that it's width will fit in the parent?
  * - setParentHeight (boolean) should the container adjust it's height so that the content will fit? (Cannot be used together with fitHeight)
  * - centerContent (boolean) should the content be centered if it's smaller then its parent?
+ * - responsive (boolean) should crush automatically rescale if the browser has been resized?
  *
- * In your HTML, make sure that the element you are calling the plugin on has a position, be it relative, absolute, or whatever. Also, the first child must have position:abslute.
- * Only the FIRST element inside this container will be scaled. If there are more children in there, the plugin may cause unexpected results.
- * Now go, young warrior. Go and set the world on fire!
+ * Requirements:
+ * - In your HTML, make sure that the element you are calling the plugin on has a position, be it relative, absolute, or whatever. Also, the first child must have position:abslute.
+ * - Only the FIRST element inside this container will be scaled. If there are more children in there, the plugin may cause unexpected results.
+ * - Now go, young warrior. Go and set the world on fire!
+ *
+ * Methods:
+ * .crush('scale') will trigger a rescale. Useful when content has changed
+ *
  */
 
 
@@ -25,7 +31,8 @@
         fitHeight:       false,
         fitWidth:        true,
         setParentHeight: false,
-        centerContent:   true
+        centerContent:   true,
+        responsive:      true
     };
 
     var methods = {
@@ -39,9 +46,11 @@
             data.$scalee = $el.children(':first');
 
             methods.scale($el, options, data);
-            $(window).resize(function () {
-                methods.scale($el, options, data);
-            });
+            if (options.responsive) {
+                $(window).resize(function () {
+                    methods.scale($el, options, data);
+                });
+            }
 
         },
 
@@ -118,6 +127,9 @@
         if (args[0] == 'option') {
             //args[1] = optionName, args[2] optionValue
             options[arg[1]] = args[2];
+            return true;
+        } else if (args[0] == 'scale') {
+            methods.scale($el, options, data);
             return true;
         }
 
