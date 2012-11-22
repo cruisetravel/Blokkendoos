@@ -13,7 +13,8 @@
  * - responsive (boolean) should crush automatically rescale if the browser has been resized?
  *
  * Requirements:
- * - In your HTML, make sure that the element you are calling the plugin on has a position, be it relative, absolute, or whatever. Also, the first child must have position:abslute.
+ * - In your HTML, make sure that the element you are calling the plugin on has a position, be it relative, absolute, or whatever.
+ * - Also, the first child must have position:abslute and a fixed width.
  * - Only the FIRST element inside this container will be scaled. If there are more children in there, the plugin may cause unexpected results.
  * - Now go, young warrior. Go and set the world on fire!
  *
