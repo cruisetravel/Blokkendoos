@@ -114,6 +114,7 @@
             //id attribute
             if (options.addFieldIds) {
                 var fieldId = fieldName.replace(/\[/g, '_').replace(/\]/g, '_').replace(/__/g, '_');
+                fieldId = fieldId.substr(0, fieldId.length - 1);
                 $input.attr('id', fieldId);
             }
 
