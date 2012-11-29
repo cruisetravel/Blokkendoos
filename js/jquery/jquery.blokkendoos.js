@@ -10,6 +10,7 @@
  * Call .blokkendoos() on an element, passing along the following options in an object (all optional)
  * - clone (boolean). Should elements be cloned (multiple instances possible) or moved (never more then 1 of a kind ends up in the grid). Default: False
  * - fadeEffect (boolean). When true, does a little fade animation when (re)placing blocks. Default: true
+ * - onDrop (function). Callback when a block has been moved, gives the dropped $item and the $cell that it was dropped in as arguments
  *
  * Call .blokkendoos('data') on the same element to retrieve an object containing the data of which blocks are in what cells. Format: cell-id => block-id
  *
@@ -25,7 +26,7 @@
  * - Have ONE element inside the wrapper with the attribute data-bd-grid (no value required). This is where the blocks can be dragged to
  * -- Define cells inside the grid. These are the positions that the blocks can be put in. Must have the attribute data-bd-cell-id. The value of this must be unique.
  *
- * - You can define of what type a block is by giving them data-bd-block-type="whatever"
+ * - You can define of what type a block is by giving them data-bd-type="whatever"
  * - You can specify what blocktypes a stash or cell will accept/deny by using data-bd-accept="type1,type2,type3" or datab-bd-deny, but not both.
  */
 
@@ -33,7 +34,8 @@
 
     var defaultOptions = {
         clone:      false,
-        fadeEffect: true
+        fadeEffect: true,
+        onDrop:     null
     }
 
     var methods = {
@@ -120,6 +122,10 @@
 
             $block.data('bd-cell', $cell);
             $cell.data('bd-block', $block);
+
+            if(typeof options.onDrop == 'function'){
+                options.onDrop($block, $cell);
+            }
         },
 
         removeBlock: function ($el, options, data, $block) {
@@ -239,7 +245,7 @@
                 $el.find('[data-bd-stash] [data-bd-block-id]').remove();
 
                 //if cloneBlocks is true, clone the $blocks instead
-                if(cloneBlocks){
+                if (cloneBlocks) {
                     $blocks = $blocks.clone();
                 }
 
@@ -250,12 +256,12 @@
             }
 
             //move blocks to their new positions!
-            for(var cellId in newData){
+            for (var cellId in newData) {
                 var blockId = newData[cellId];
 
                 //find the block and cell
-                var $block = $el.find('[data-bd-stash] [data-bd-block-id='+blockId+']')
-                var $cell = $el.find('[data-bd-grid] [data-bd-cell-id='+cellId+']')
+                var $block = $el.find('[data-bd-stash] [data-bd-block-id=' + blockId + ']')
+                var $cell = $el.find('[data-bd-grid] [data-bd-cell-id=' + cellId + ']')
                 methods.moveBlock($el, options, data, $block, $cell);
             }
 
