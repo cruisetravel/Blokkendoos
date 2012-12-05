@@ -8,6 +8,8 @@
  * - maxScale (float) the maximum scale to which the content will scale (0-1)
  * - fitHeight (boolean) should the content be scaled so that it's height will fit in the parent?
  * - fitWidth (boolean) should the content be scaled so that it's width will fit in the parent?
+ * - setHeight (boolean) should the height of the scalee be adjusted (only works with fitWidth)
+ * - setWidth (boolean) should the width of the scalee be adjusted (only works with fitHeight)
  * - setParentHeight (boolean) should the container adjust it's height so that the content will fit? (Cannot be used together with fitHeight)
  * - centerContent (boolean) should the content be centered if it's smaller then its parent?
  * - responsive (boolean) should crush automatically rescale if the browser has been resized?
@@ -15,7 +17,7 @@
  * Requirements:
  * - In your HTML, make sure that the element you are calling the plugin on has a position, be it relative, absolute, or whatever.
  * - Also, the first child must have position:abslute and a fixed width.
- * - Only the FIRST element inside this container will be scaled. If there are more children in there, the plugin may cause unexpected results.
+ * - Only the FIRST child inside this container will be scaled. If there are more children in there, the plugin may cause unexpected results.
  * - Now go, young warrior. Go and set the world on fire!
  *
  * Methods:
@@ -31,9 +33,12 @@
         maxScale:        1,
         fitHeight:       false,
         fitWidth:        true,
+        setWidth:        false,
+        setHeight:       false,
         setParentHeight: false,
         centerContent:   true,
-        responsive:      true
+        responsive:      true,
+        rescaleInterval: 0
     };
 
     var methods = {
@@ -51,6 +56,11 @@
                 $(window).resize(function () {
                     methods.scale($el, options, data);
                 });
+            }
+            if (options.rescaleInterval > 0) {
+                window.setInterval(function () {
+                    methods.scale($el, options, data);
+                }, options.rescaleInterval);
             }
 
         },
@@ -107,6 +117,14 @@
                 data.$scalee.css({
                     left: ($el.innerWidth() - actualWidth) / 2
                 })
+            }
+
+            if (options.setWidth && !options.setHeight && options.fitHeight && !options.fitWidth) {
+                data.$scalee.css('width', $el.innerWidth() / ratio);
+            }
+
+            if (options.setHeight && !options.setWidth && options.fitWidth && !options.fitHeight) {
+                data.$scalee.css('height', $el.innerHeight() / ratio);
             }
         }
     }
