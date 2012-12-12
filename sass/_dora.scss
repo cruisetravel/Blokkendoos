@@ -1,0 +1,57 @@
+$dora-color-item-selected : #eee;
+$dora-color-item-selected-text : inherit;
+$dora-color-item-focus : #A6DE78;
+$dora-color-item-focus-text : inherit;
+
+.dora {
+    @extend .clearfix;
+    outline: none !important;
+
+    *[data-dora-container] {
+        position   : relative;
+        overflow-x : scroll;
+
+        ul {
+            box-sizing : border-box;
+            background : #fff;
+            border     : 1px solid #ddd;
+            @include border-radius(5px);
+            padding    : 10px;
+            margin     : 0 !important;
+            top        : 0;
+            bottom     : 5px;
+            overflow-y : auto;
+            position   : absolute;
+
+            li {
+                padding          : 3px 5px 3px 5px;
+                cursor           : pointer;
+                list-style-image : none;
+                overflow         : hidden;
+
+                &.folder {
+                    font-weight : bold;
+                    &:after {
+                        content : "\00BB";
+                        float   : right;
+                    }
+                }
+                &.object {
+                    font-style : italic;
+                }
+
+                &.selected, &:hover {
+                    background : $dora-color-item-selected;
+                    color      : $dora-color-item-selected-text;
+                    @include border-radius(3px);
+                }
+
+                &.focus {
+                    background : $dora-color-item-focus !important;
+                    color      : $dora-color-item-focus-text !important;
+                    @include border-radius(3px);
+                }
+            }
+        }
+    }
+}
