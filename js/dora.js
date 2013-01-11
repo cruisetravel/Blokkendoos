@@ -25,12 +25,12 @@ $(function () {
         root:        rootFolder,
 
         loadObject: function (object) {
-            console.log("Loading object", object);
+            //console.log("Loading object", object);
             alert("Opening " + object.location + ". (See console)");
         },
 
         loadFolder: function (folder) {
-            console.log("Loading folder", folder);
+            //console.log("Loading folder", folder);
             var items;
             $.ajax('api/dora/getfolder', {
                 data:    {folder: folder.location},

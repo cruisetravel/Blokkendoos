@@ -12,7 +12,7 @@ $dora-color-item-focus-text : inherit;
         overflow-x : scroll;
 
         ul {
-            box-sizing : border-box;
+            @include box-sizing(border-box);
             background : #fff;
             border     : 1px solid #ddd;
             @include border-radius(5px);
