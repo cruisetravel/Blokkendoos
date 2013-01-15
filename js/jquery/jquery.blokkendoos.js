@@ -10,6 +10,7 @@
  * Call .blokkendoos() on an element, passing along the following options in an object (all optional)
  * - clone (boolean). Should elements be cloned (multiple instances possible) or moved (never more then 1 of a kind ends up in the grid). Default: False
  * - fadeEffect (boolean). When true, does a little fade animation when (re)placing blocks. Default: true
+ * - altHelper (boolean) Semi-nasty hack; use this in combination with Crush as scaled blocks can act rather strangely in combination with Draggables. Default: false
  * - onDrop (function). Callback when a block has been moved, gives the dropped $item and the $cell that it was dropped in as arguments
  *
  * Call .blokkendoos('data') on the same element to retrieve an object containing the data of which blocks are in what cells. Format: cell-id => block-id
@@ -26,7 +27,7 @@
  * - Have ONE element inside the wrapper with the attribute data-bd-grid (no value required). This is where the blocks can be dragged to
  * -- Define cells inside the grid. These are the positions that the blocks can be put in. Must have the attribute data-bd-cell-id. The value of this must be unique.
  *
- * - You can define of what type a block is by giving them data-bd-type="whatever"
+ * - You can define of what type a block is by giving them data-bd-block-type="whatever"
  * - You can specify what blocktypes a stash or cell will accept/deny by using data-bd-accept="type1,type2,type3" or datab-bd-deny, but not both.
  */
 
@@ -35,8 +36,9 @@
     var defaultOptions = {
         clone:      false,
         fadeEffect: true,
+        altHelper:  false,
         onDrop:     null
-    }
+    };
 
     var methods = {
         init: function ($el, argOptions) {
@@ -49,17 +51,20 @@
             //make the blocks draggable
             $el.find("*[data-bd-stash] *[data-bd-block-id], *[data-bd-grid] *[data-bd-block-id]").livequery(function () {
                 $(this).draggable({
-                    helper:  'clone',
+                    helper:  !options.altHelper ? 'clone' : function () {
+                        var scaledSize = $(this)[0].getBoundingClientRect()
+                        return $("<div style='background: black; width: " + scaledSize.width + "px; height:" + scaledSize.height + "px'></div>").appendTo($('body'));
+                    },
                     opacity: 0.5
                 });
             });
 
             //make the gridcells accept the blocks, and handle what happens next
             $el.find("*[data-bd-grid] *[data-bd-cell-id]").livequery(function () {
-
                 $(this).droppable({
                     accept:     '*[data-bd-block-id]',
                     hoverClass: 'bd-cell-hover',
+                    tolerance:  'pointer',
                     drop:       function (e, ui) {
                         var $block = $(ui.draggable);
                         var $cell = $(this);
@@ -123,7 +128,7 @@
             $block.data('bd-cell', $cell);
             $cell.data('bd-block', $block);
 
-            if(typeof options.onDrop == 'function'){
+            if (typeof options.onDrop == 'function') {
                 options.onDrop($block, $cell);
             }
         },
@@ -266,7 +271,7 @@
             }
 
         }
-    }
+    };
 
     $.fn.blokkendoos = function () {
         var args = arguments;
@@ -298,6 +303,6 @@
         }
 
         //});
-    }
+    };
 
 })(jQuery);
